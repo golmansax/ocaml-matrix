@@ -7,7 +7,7 @@ struct
   exception NonElt
 
   type t = float
-  
+
   (* Need an epsilon to compare floats. We define the precion here *)
   let epsilon = 0.000001
 
@@ -20,19 +20,19 @@ struct
    * if that's below epsilon. *)
   let compare a b =
     let a', b' = abs_float a, abs_float b in
-    if a' < epsilon && b' < epsilon then 
+    if a' < epsilon && b' < epsilon then
       Order.Equal
-    else 
-      let diff = (a -. b) /. (max a' b') in 
+    else
+      let diff = (a -. b) /. (max a' b') in
       if abs_float diff < epsilon then Order.Equal
       else if a < b then Order.Less
       else if a > b then Order.Greater
       else
         raise (Failure "Error in compare.")
-  
+
   let to_string = string_of_float
 
-  let from_string (x: string) = 
+  let from_string (x: string) =
     try
       float_of_string x
     with
@@ -42,29 +42,29 @@ struct
 
   let subtract = (-.)
 
-  let multiply = ( *. ) 
+  let multiply = ( *. )
 
-  let divide = (/.) 
+  let divide = (/.)
 
   let print a = print_string ((to_string a) ^ "\n")
 
   let trim = int_of_float
 
-  let generate () = 3. 
+  let generate () = 3.
 
   let generate_gt a () = a +. 1.
 
-  let generate_lt a () = a -. 1. 
+  let generate_lt a () = a -. 1.
 
   let generate_between a b () = if a > b then None else Some((a +. b)/. 2.)
-  
+
   let generate_x x () = (x:t)
 
   let generate_random bound () =
     let x = Random.float bound in
     x -. mod_float x epsilon
 
-  (************************ TESTS ********************************)  
+  (************************ TESTS ********************************)
 
   let rec test_compare (times:int) : unit =
     let random t = float_of_int (Random.int t - Random.int t) in
@@ -83,7 +83,7 @@ struct
     ()
 end
 
-module Num_floats : EltsI.ORDERED_AND_OPERATIONAL = 
+module Num_floats : EltsI.ORDERED_AND_OPERATIONAL =
 struct
 
   exception NonElt
@@ -94,7 +94,7 @@ struct
 
   let one = Num.num_of_int 1
 
-  let compare a b = 
+  let compare a b =
     if Num.compare_num a b = -1 then Order.Less
     else if Num.compare_num a b = 0 then Order.Equal
     else if Num.compare_num a b = 1 then Order.Greater
@@ -103,7 +103,7 @@ struct
 
   let to_string = Num.string_of_num
 
-  let from_string (x: string) = 
+  let from_string (x: string) =
     try
       Num.num_of_string x
     with
@@ -119,20 +119,20 @@ struct
 
   let generate () = Num.num_of_int 3
 
-  let generate_gt a () = Num.add_num a one 
+  let generate_gt a () = Num.add_num a one
 
-  let generate_lt a () = Num.sub_num a (subtract zero one) 
+  let generate_lt a () = Num.sub_num a (subtract zero one)
 
-  let generate_between a b () = 
-    if Num.gt_num a b then None 
+  let generate_between a b () =
+    if Num.gt_num a b then None
     else Some (Num.div_num (Num.add_num a b) (Num.num_of_int 2))
 
-  let generate_x (x:float) () = 
+  let generate_x (x:float) () =
     let new_x = int_of_float x in Num.num_of_int new_x
 
   (* This actually only generates integers. *)
-  let generate_random (bound: float) () = 
-    let new_bound = int_of_float bound in 
+  let generate_random (bound: float) () =
+    let new_bound = int_of_float bound in
     Num.num_of_int (Random.int new_bound)
 
   let print a = print_string ((to_string a) ^ "\n")
@@ -155,5 +155,5 @@ end
 
 
 (*** HERE IS WHERE YOU PICK THE MODULE *)
-(*module Elts = Floats *)
-module Elts = Num_floats
+module Elts = Floats
+(*module Elts = Num_floats*)
